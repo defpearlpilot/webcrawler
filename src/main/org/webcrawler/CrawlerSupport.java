@@ -16,6 +16,8 @@ public class CrawlerSupport
 {
     private static final FilterConfig ANCHOR_CONFIG = new AnchorFilterConfig();
     private static final FilterConfig LINK_CONFIG = new LinkFilterConfig();
+    private static final FilterConfig IMAGE_CONFIG = new ImageFilterConfig();
+    private static final FilterConfig SCRIPT_CONFIG = new ScriptFilterConfig();
 
 
 
@@ -31,6 +33,18 @@ public class CrawlerSupport
     }
 
 
+    public static Collection<Link> extractImages(Document doc, Domain domain)
+    {
+        return extractFromDocument(IMAGE_CONFIG, doc, domain).collect(Collectors.toList());
+    }
+
+
+    public static Collection<Link> extractScripts(Document doc, Domain domain)
+    {
+        return extractFromDocument(SCRIPT_CONFIG, doc, domain).collect(Collectors.toList());
+    }
+
+
     private static Stream<Link> extractFromDocument(FilterConfig config, Document doc, Domain domain)
     {
         Elements references = doc.select(config.getTagFilter());
@@ -42,7 +56,6 @@ public class CrawlerSupport
     {
         return StreamUtils.toParallelStream(links.iterator())
                           .map(elt -> elt.attr(config.getLinkAttribute()))
-                          .filter(domain::contains)
                           .map(LinkSupport::toURI)
                           .filter(Try::isSuccess)
                           .map(Try::get)

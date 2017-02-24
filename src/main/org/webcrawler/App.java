@@ -22,5 +22,10 @@ public class App
                    .andThen(Domain::crawlSite)
                    .andThen(Domain::showSiteMap);
 
+        LinkSupport.toURI("http://reddit.com")
+                   .map(Domain::new)
+                   .andThen(Domain::crawlSite)
+                   .andThen(Domain::showSiteMap);
+
     }
 }

@@ -4,9 +4,9 @@ package org.webcrawler.links;
 import java.net.URI;
 
 
-public class Anchor extends Link
+public class SourceLink extends Link
 {
-    public Anchor(Domain domain, URI link)
+    public SourceLink(Domain domain, URI link)
     {
         super(domain, link);
     }
@@ -15,13 +15,13 @@ public class Anchor extends Link
     @Override
     public boolean isTraversable()
     {
-        return true;
+        return false;
     }
 
 
     @Override
     public String toString()
     {
-        return "Anchor(" + link + ")";
+        return "Link(" + link + ")";
     }
 }

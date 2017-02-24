@@ -7,12 +7,12 @@ import java.net.URI;
 /**
  * Created by andrew on 2/19/17.
  */
-public class ImageFilterConfig implements FilterConfig
+public class ScriptFilterConfig implements FilterConfig
 {
     @Override
     public String getTagFilter()
     {
-        return "img[src]";
+        return "script[src]";
     }
 
 
@@ -26,8 +26,6 @@ public class ImageFilterConfig implements FilterConfig
     @Override
     public Link createLink(Domain domain, URI ref)
     {
-        return new Media(domain, ref);
+        return new Script(domain, ref);
     }
-
-
 }

@@ -19,15 +19,14 @@ public class LinkFilterConfig implements FilterConfig
     @Override
     public String getLinkAttribute()
     {
-        return "abs:href";
+        return "href";
     }
 
 
     @Override
     public Link createLink(Domain domain, URI ref)
     {
-        System.out.println("Creating link " + ref);
-        return new Anchor(domain, ref);
+        return new SourceLink(domain, ref);
     }
 
 

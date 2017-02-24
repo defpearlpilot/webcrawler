@@ -2,9 +2,9 @@ package org.webcrawler.links;
 
 
 import javaslang.control.Try;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.webcrawler.CrawlerSupport;
+import org.webcrawler.JsoupSupport;
 
 import java.net.URI;
 import java.util.Collection;
@@ -19,6 +19,7 @@ public abstract class Link
     protected final Collection<Link> childAnchors;
     protected final Collection<Link> mediaLinks;
     protected final Collection<Link> scripts;
+    protected final Collection<Link> links;
 
 
     public Link(Domain domain, URI link)
@@ -29,7 +30,11 @@ public abstract class Link
         childAnchors = new LinkedList<>();
         mediaLinks = new LinkedList<>();
         scripts = new LinkedList<>();
+        links = new LinkedList<>();
     }
+
+
+    public abstract boolean isTraversable();
 
 
     public URI getLink()
@@ -44,14 +49,43 @@ public abstract class Link
     }
 
 
+    public Collection<Link> getMediaLinks()
+    {
+        return mediaLinks;
+    }
+
+
+    public Collection<Link> getScripts()
+    {
+        return scripts;
+    }
+
+
+    public Collection<Link> getChildLinks()
+    {
+        return links;
+    }
+
+
     public void crawlSite()
     {
+        if (!this.isTraversable())
+        {
+            return;
+        }
+
         openBuffer().andThen(this::readLinks)
                     .andThen(() ->
                              {
                                  childAnchors.parallelStream()
+                                             .filter(anchor -> domain.canTraverse(anchor.getLink()))
                                              .filter(anchor -> domain.canVisit(anchor.getLink()))
                                              .forEach(Link::crawlSite);
+
+                                 links.parallelStream()
+                                      .filter(anchor -> domain.canTraverse(anchor.getLink()))
+                                      .filter(anchor -> domain.canVisit(anchor.getLink()))
+                                      .forEach(Link::crawlSite);
                              });
     }
 
@@ -70,10 +104,7 @@ public abstract class Link
 
     private Try<Document> openBuffer()
     {
-        return Try.of(() -> {
-            String location = this.link.toURL().toString();
-            return Jsoup.connect(location).get();
-        });
+        return JsoupSupport.connectBuffer(this.link);
     }
 
 
@@ -82,7 +113,9 @@ public abstract class Link
         return Try.of(() ->
                       {
                           childAnchors.addAll(CrawlerSupport.extractAnchors(doc, getDomain()));
-                          mediaLinks.addAll(CrawlerSupport.extractLinks(doc, getDomain()));
+                          scripts.addAll(CrawlerSupport.extractScripts(doc, getDomain()));
+                          links.addAll(CrawlerSupport.extractLinks(doc, getDomain()));
+                          mediaLinks.addAll(CrawlerSupport.extractImages(doc, getDomain()));
                           return true;
                       });
     }

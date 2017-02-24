@@ -4,9 +4,7 @@ package org.webcrawler.links;
 import java.net.URI;
 
 
-/**
- * Created by andrew on 2/19/17.
- */
+
 public class AnchorFilterConfig implements FilterConfig
 {
     @Override
@@ -26,7 +24,6 @@ public class AnchorFilterConfig implements FilterConfig
     @Override
     public Link createLink(Domain domain, URI ref)
     {
-        System.out.println("Creating anchor " + ref);
         return new Anchor(domain, ref);
     }
 

@@ -8,12 +8,19 @@ import java.util.Set;
 
 public class Domain extends Link
 {
-    private static final Set<URI> visited = new HashSet<>();
+    private final Set<URI> visited = new HashSet<>();
 
 
     public Domain(URI domain)
     {
         super(null, domain);
+    }
+
+
+    @Override
+    public boolean isTraversable()
+    {
+        return true;
     }
 
 
@@ -30,12 +37,9 @@ public class Domain extends Link
     }
 
 
-    public boolean contains(String ref)
+    public boolean canTraverse(URI uri)
     {
-        boolean contains = ref.contains(link.getHost());
-
-        System.out.println("Checking domain: " + ref + " " + link.getHost() + " " + contains);
-        return contains;
+        return uri.toString().contains(link.getHost());
     }
 
 
@@ -47,10 +51,7 @@ public class Domain extends Link
 
     public boolean visitURI(URI uri)
     {
-        boolean didVisit = visited.add(uri);
-        System.out.println("Visiting " + uri + ": " + didVisit);
-
-        return didVisit;
+        return visited.add(uri);
     }
 
 }
