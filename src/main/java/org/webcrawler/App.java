@@ -13,6 +13,11 @@ public class App
 {
     public static void main( String[] args )
     {
+        if (args.length == 1)
+        {
+
+        }
+
 //        Domain google = new Domain("http://www.google.com");
 //        google.crawlSite();
 
