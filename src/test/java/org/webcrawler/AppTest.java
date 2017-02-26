@@ -3,6 +3,8 @@ package org.webcrawler;
 
 import java.net.URL;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 class AppTest
 {
@@ -10,7 +12,7 @@ class AppTest
     void main()
     {
         URL resource = App.class.getResource("/index.html");
-        System.out.println(resource);
+        assertNotNull(resource);
     }
 
 }
