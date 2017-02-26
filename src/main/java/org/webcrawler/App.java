@@ -4,6 +4,8 @@ package org.webcrawler;
 import org.webcrawler.links.Domain;
 import org.webcrawler.links.LinkSupport;
 
+import java.net.URI;
+
 
 /**
  * Hello world!
@@ -13,24 +15,22 @@ public class App
 {
     public static void main( String[] args )
     {
-        if (args.length == 1)
+        if (args.length == 0)
         {
-
+            System.out.println("Expected an argument with a URL");
+            return;
         }
 
-//        Domain google = new Domain("http://www.google.com");
-//        google.crawlSite();
 
+        String url = args[0];
 
-        LinkSupport.toURI("http://wiprodigital.com")
+        LinkSupport.toURI(url)
+                   .andThenTry(URI::toURL)
                    .map(Domain::new)
                    .andThen(Domain::crawlSite)
-                   .andThen(Domain::showSiteMap);
-
-        LinkSupport.toURI("http://reddit.com")
-                   .map(Domain::new)
-                   .andThen(Domain::crawlSite)
-                   .andThen(Domain::showSiteMap);
-
+                   .andThen(Domain::showSiteMap)
+                   .onFailure(error -> {
+                       System.out.println("Failed to produce output: " + error.getMessage());
+                   });
     }
 }
