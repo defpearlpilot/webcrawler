@@ -3,7 +3,7 @@ package org.webcrawler;
 
 import javaslang.control.Try;
 import org.jsoup.nodes.Document;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.webcrawler.links.Domain;
 import org.webcrawler.links.Link;
 
@@ -13,8 +13,8 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 
 class CrawlerSupportTest

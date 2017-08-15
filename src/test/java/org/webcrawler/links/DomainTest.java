@@ -1,13 +1,14 @@
 package org.webcrawler.links;
 
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 
 
 /**

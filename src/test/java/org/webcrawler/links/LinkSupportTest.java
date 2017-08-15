@@ -2,13 +2,12 @@ package org.webcrawler.links;
 
 
 import javaslang.control.Try;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.net.URI;
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import static junit.framework.TestCase.assertTrue;
 
 
 class LinkSupportTest

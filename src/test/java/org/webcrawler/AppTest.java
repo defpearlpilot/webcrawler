@@ -1,14 +1,16 @@
 package org.webcrawler;
 
 
+import org.junit.Test;
+
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static junit.framework.TestCase.assertNotNull;
 
 
 class AppTest
 {
-    @org.junit.jupiter.api.Test
+    @Test
     void main()
     {
         URL resource = App.class.getResource("/index.html");
