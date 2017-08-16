@@ -1,4 +1,4 @@
-package org.scrawler.actors.indexer
+package scrawler.actors.indexer
 
 import java.net.URL
 

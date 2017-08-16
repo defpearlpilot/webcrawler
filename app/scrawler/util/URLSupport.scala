@@ -1,4 +1,4 @@
-package org.scrawler.util
+package scrawler.util
 
 import java.net.URL
 

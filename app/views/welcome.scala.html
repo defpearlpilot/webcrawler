@@ -1,0 +1,32 @@
+@(message: String, style: String = "scala") 
+
+@defining(play.core.PlayVersion.current) { version =>
+
+<section id="top">
+  <div class="wrapper">
+    <h1><a href="https://playframework.com/documentation/@version/Home">@message</a></h1>
+  </div>
+</section>
+
+<div id="content" class="wrapper doc">
+<article>
+
+  <h1>Welcome to Play</h1>
+
+  <blockquote>
+    <p>
+      You’re using Play @version
+    </p>
+  </blockquote>
+
+
+    <p>
+        <a href="@routes.AsyncController.message">Click here for the AsyncController action!</a>
+    </p>
+
+    <p>
+        <a href="@routes.CountController.count">Click here for the CountController action!</a>
+    </p>
+
+</div>
+}

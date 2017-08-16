@@ -1,16 +1,18 @@
-package org.scrawler.actors.crawler
+package scrawler.actors.crawler
 
 import java.net.URL
 
 import akka.actor.Actor
+import com.google.inject.Inject
 import org.jsoup.Jsoup
-import org.scrawler.actors.indexer.IndexURLCommand
-import org.scrawler.util.URLSupport
+import scrawler.actors.indexer.IndexURLCommand
+import scrawler.actors.parser.PageParser
+import scrawler.util.URLSupport
 
 import scala.collection.JavaConverters._
 
 
-class Crawler() extends Actor {
+class Crawler @Inject()(parser: PageParser) extends Actor {
 
   def receive = {
     case crawlCommand: CrawlURLCommand => traverseURL(crawlCommand.url)
@@ -26,7 +28,7 @@ class Crawler() extends Actor {
   }
 
   private def getAllPageLinks(url: URL): List[URL] = {
-    val linkElements = Jsoup.connect(url.toString).timeout(0).get().select("a[href]")
+    val linkElements = parser.fetchElements(url, "a[href]")
     val rawLinks = (for (link <- linkElements.iterator().asScala) yield
       {
         link.attr("href")

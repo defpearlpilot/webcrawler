@@ -1,10 +1,10 @@
-package org.scrawler.actors.indexer
+package scrawler.actors.indexer
 
 import java.net.URL
 
 import akka.actor.{Actor, ActorRef}
-import org.scrawler.actors.crawler.CrawlURLCommand
-import org.scrawler.util.URLSupport
+import scrawler.actors.crawler.CrawlURLCommand
+import scrawler.util.URLSupport
 
 import scala.collection.mutable
 

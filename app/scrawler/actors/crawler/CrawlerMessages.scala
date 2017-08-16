@@ -1,4 +1,4 @@
-package org.scrawler.actors.crawler
+package scrawler.actors.crawler
 
 import java.net.URL
 
