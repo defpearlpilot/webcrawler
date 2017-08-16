@@ -4,15 +4,17 @@ import java.net.URL
 
 import akka.actor.Actor
 import com.google.inject.Inject
-import org.jsoup.Jsoup
-import scrawler.actors.indexer.IndexURLCommand
+import scrawler.actors.indexer.SiteIndexingActor
 import scrawler.actors.parser.PageParser
 import scrawler.util.URLSupport
 
 import scala.collection.JavaConverters._
 
 
-class Crawler @Inject()(parser: PageParser) extends Actor {
+class Crawler extends Actor {
+
+  @Inject
+  val parser: PageParser = null
 
   def receive = {
     case crawlCommand: CrawlURLCommand => traverseURL(crawlCommand.url)
@@ -21,9 +23,10 @@ class Crawler @Inject()(parser: PageParser) extends Actor {
 
   private def traverseURL(url: URL): Unit =
   {
+    println(s"Will traverse url $url")
     getAllPageLinks(url).foreach(childUrl =>
                                  {
-                                   sender ! IndexURLCommand(childUrl)
+                                   sender ! SiteIndexingActor.IndexURLCommand(childUrl)
                                  })
   }
 

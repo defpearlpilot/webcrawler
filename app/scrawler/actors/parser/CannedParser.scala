@@ -8,13 +8,17 @@ import org.jsoup.select.Elements
 
 import scala.collection.mutable
 
-class CannedParser extends PageParser
-{
+class CannedParser extends PageParser {
   val map = new mutable.HashMap[String, Elements]()
-  map.put("http://first.com", new Elements(anchor("http://first.com/page1"),
-                                           anchor("http://first.com/page2")))
-  map.put("http://first.com/page1", new Elements(anchor("http://first.com")))
-  map.put("http://first.com/page2", new Elements(anchor("http://first.com")))
+
+  map.put("http://wiprodigital.com",
+          new Elements(anchor("http://wiprodigital.com/page1"),
+                       anchor("http://wiprodigital.com/page2")))
+
+  map.put("http://wiprodigital.com/page1", new Elements(anchor("http://wiprodigital.com")))
+
+  map.put("http://wiprodigital.com/page2", new Elements(anchor("http://wiprodigital.com")))
+
 
   def anchor(ref: String): Element = {
     val attributes = new Attributes()
@@ -25,9 +29,7 @@ class CannedParser extends PageParser
   }
 
 
-
-  override def fetchElements(url: URL, element: String): Elements =
-  {
+  override def fetchElements(url: URL, element: String): Elements = {
     map(url.toString)
   }
 }

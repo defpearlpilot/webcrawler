@@ -1,8 +1,8 @@
-package org.webcrawler;
+package crawler;
 
 
-import org.webcrawler.links.Domain;
-import org.webcrawler.links.LinkSupport;
+import crawler.links.Domain;
+import crawler.links.LinkSupport;
 
 import java.net.URI;
 

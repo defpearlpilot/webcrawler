@@ -1,4 +1,4 @@
-package org.webcrawler;
+package crawler;
 
 
 import javaslang.control.Try;

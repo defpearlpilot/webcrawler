@@ -1,7 +1,10 @@
 import java.time.Clock
 
 import com.google.inject.AbstractModule
-import scrawler.actors.parser.{CannedParser, PageParser}
+import play.libs.akka.AkkaGuiceSupport
+import scrawler.actors.crawler.Crawler
+import scrawler.actors.indexer.SiteIndexingActor
+import scrawler.actors.parser.{CannedParser, JSoupParser, PageParser}
 import services.{ApplicationTimer, AtomicCounter, Counter}
 
 /**
@@ -14,7 +17,7 @@ import services.{ApplicationTimer, AtomicCounter, Counter}
  * adding `play.modules.enabled` settings to the `application.conf`
  * configuration file.
  */
-class Module extends AbstractModule {
+class Module extends AbstractModule with AkkaGuiceSupport {
 
   override def configure() = {
     // Use the system clock as the default implementation of Clock
@@ -25,7 +28,10 @@ class Module extends AbstractModule {
     // Set AtomicCounter as the implementation for Counter.
     bind(classOf[Counter]).to(classOf[AtomicCounter])
 
-    bind(classOf[PageParser]).to(classOf[CannedParser])
+    bind(classOf[PageParser]).to(classOf[JSoupParser])
+
+    bindActor(classOf[SiteIndexingActor], "indexer")
+    bindActor(classOf[Crawler], "crawler")
   }
 
 }

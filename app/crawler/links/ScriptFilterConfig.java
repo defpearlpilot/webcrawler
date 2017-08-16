@@ -1,4 +1,4 @@
-package org.webcrawler.links;
+package crawler.links;
 
 
 import java.net.URI;
@@ -7,27 +7,25 @@ import java.net.URI;
 /**
  * Created by andrew on 2/19/17.
  */
-public class LinkFilterConfig implements FilterConfig
+public class ScriptFilterConfig implements FilterConfig
 {
     @Override
     public String getTagFilter()
     {
-        return "link[href]";
+        return "script[src]";
     }
 
 
     @Override
     public String getLinkAttribute()
     {
-        return "href";
+        return "src";
     }
 
 
     @Override
     public Link createLink(Domain domain, URI ref)
     {
-        return new SourceLink(domain, ref);
+        return new Script(domain, ref);
     }
-
-
 }

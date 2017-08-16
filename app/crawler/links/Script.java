@@ -1,12 +1,12 @@
-package org.webcrawler.links;
+package crawler.links;
 
 
 import java.net.URI;
 
 
-public class SourceLink extends Link
+public class Script extends Link
 {
-    public SourceLink(Domain domain, URI link)
+    public Script(Domain domain, URI link)
     {
         super(domain, link);
     }
@@ -22,6 +22,6 @@ public class SourceLink extends Link
     @Override
     public String toString()
     {
-        return "Link(" + link + ")";
+        return "Script(" + link + ")";
     }
 }

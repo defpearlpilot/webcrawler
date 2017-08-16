@@ -5,6 +5,10 @@
 # An example controller showing a sample home page
 GET     /                           controllers.SiteMapController.index
 
+
+# An example controller showing a sample home page
+GET     /crawl                      controllers.SiteMapController.crawl
+
 # An example controller showing how to use dependency injection
 GET     /count                      controllers.CountController.count
 

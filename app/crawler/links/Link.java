@@ -1,10 +1,10 @@
-package org.webcrawler.links;
+package crawler.links;
 
 
 import javaslang.control.Try;
 import org.jsoup.nodes.Document;
-import org.webcrawler.CrawlerSupport;
-import org.webcrawler.JsoupSupport;
+import crawler.CrawlerSupport;
+import crawler.JsoupSupport;
 
 import java.net.URI;
 import java.util.Collection;

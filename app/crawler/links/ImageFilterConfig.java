@@ -1,4 +1,4 @@
-package org.webcrawler.links;
+package crawler.links;
 
 
 import java.net.URI;
@@ -7,12 +7,12 @@ import java.net.URI;
 /**
  * Created by andrew on 2/19/17.
  */
-public class ScriptFilterConfig implements FilterConfig
+public class ImageFilterConfig implements FilterConfig
 {
     @Override
     public String getTagFilter()
     {
-        return "script[src]";
+        return "img[src]";
     }
 
 
@@ -26,6 +26,8 @@ public class ScriptFilterConfig implements FilterConfig
     @Override
     public Link createLink(Domain domain, URI ref)
     {
-        return new Script(domain, ref);
+        return new Media(domain, ref);
     }
+
+
 }

@@ -7,6 +7,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala).enablePlugins(Sb
 scalaVersion := "2.12.2"
 
 //resolvers += "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/"
+resolvers += DefaultMavenRepository
 resolvers += Resolver.sonatypeRepo("releases")
 resolvers += Resolver.jcenterRepo
 

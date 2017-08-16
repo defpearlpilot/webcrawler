@@ -1,15 +1,14 @@
-package org.webcrawler;
+package crawler;
 
 
+import crawler.links.*;
 import javaslang.control.Try;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.webcrawler.links.*;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 
 
 public class CrawlerSupport
@@ -21,7 +20,7 @@ public class CrawlerSupport
 
 
 
-    public static Collection<Link> extractAnchors(Document doc, Domain domain)
+    public static Collection<Link> extractAnchors( Document doc, Domain domain)
     {
         return extractFromDocument(ANCHOR_CONFIG, doc, domain).collect(Collectors.toList());
     }
@@ -52,7 +51,7 @@ public class CrawlerSupport
     }
 
 
-    private static Stream<Link> processElement(FilterConfig config, Domain domain, Elements links)
+    private static Stream<Link> processElement( FilterConfig config, Domain domain, Elements links)
     {
         return StreamUtils.toParallelStream(links.iterator())
                           .map(elt -> elt.attr(config.getLinkAttribute()))
