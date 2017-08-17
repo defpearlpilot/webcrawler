@@ -3,14 +3,18 @@ package scrawler.actors.indexer
 import java.net.URL
 import javax.inject._
 
+import akka.{Done, NotUsed}
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import akka.event.LoggingReceive
+import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, MergeHub, Sink}
 import play.api.libs.concurrent.InjectedActorSupport
+import play.api.libs.json.JsValue
 import scrawler.actors.crawler.CrawlURLCommand
 import scrawler.actors.indexer.SiteIndexingActor.{FutureURLCommand, IndexURLCommand, IndexingCompleteCommand, InitializeDomainCommand}
 import scrawler.util.URLSupport
 
 import scala.collection.mutable
+import scala.concurrent.Future
 
 
 object SiteIndexingActor
@@ -26,6 +30,9 @@ class SiteIndexingActor @Inject()(@Named("crawler") crawler: ActorRef)
           with InjectedActorSupport
           with ActorLogging
 {
+  import akka.pattern.{ask, pipe}
+
+
   private var domain: Option[URL] = Option.empty
   private val visited = new mutable.HashSet[URL]
 
@@ -40,10 +47,7 @@ class SiteIndexingActor @Inject()(@Named("crawler") crawler: ActorRef)
 
   private def indexURL(message: IndexURLCommand): Unit =
   {
-    if (domain.isEmpty)
-    {
-      throw new IllegalStateException("Attempting to index a url without having defined the domain")
-    }
+    checkDomain()
 
     val url = message.url
 
@@ -63,11 +67,17 @@ class SiteIndexingActor @Inject()(@Named("crawler") crawler: ActorRef)
   }
 
 
-  private def futureIndexURL(message: FutureURLCommand): Unit =
+  private def checkDomain(): Unit =
   {
-    if (domain.isEmpty) {
+    if (domain.isEmpty)
+    {
       throw new IllegalStateException("Attempting to index a url without having defined the domain")
     }
+  }
+
+  private def futureIndexURL(message: FutureURLCommand): Unit =
+  {
+    checkDomain()
 
     val url = message.url
 
@@ -81,6 +91,38 @@ class SiteIndexingActor @Inject()(@Named("crawler") crawler: ActorRef)
         println(s"$url is not part of this domain!")
       }
     }
+
+
+    pipe()
+  }
+
+
+  val (crawlerSink, crawlerSource) = MergeHub.source[JsValue](perProducerBufferSize = 16)
+    .toMat(BroadcastHub.sink(bufferSize = 256))(Keep.both)
+    .run()
+
+
+  private val commandSink: Sink[JsValue, Future[Done]] = Sink.foreach
+  {
+    json => {
+      // When the user types in a stock in the upper right corner, this is triggered,
+      val symbol = (json \ "symbol").as[StockSymbol]
+      addStocks(Set(symbol))
+    }
+  }
+
+
+
+  private def future(): Unit = {
+    // Put the source and sink together to make a flow of hub source as output (aggregating all
+    // stocks as JSON to the browser) and the actor as the sink (receiving any JSON messages
+    // from the browse), using a coupled sink and source.
+    Flow.fromSinkAndSourceCoupled(commandSink, crawlerSource).watchTermination(){ (_, termination) =>
+      // When the flow shuts down, make sure this actor also stops.
+      termination.foreach(_ => context.stop(self))
+      NotUsed
+                                                                          }
+
   }
 
 

@@ -25,7 +25,8 @@ import scala.concurrent.duration._
 class SiteMapController @Inject()(@Named("indexer") indexer: ActorRef,
                                   cc: ControllerComponents)
                                  (implicit ec: ExecutionContext)
-  extends AbstractController(cc) with SameOriginCheck
+  extends AbstractController(cc)
+    with RequestValidator
 {
 
   /**
@@ -52,7 +53,7 @@ class SiteMapController @Inject()(@Named("indexer") indexer: ActorRef,
 
 
   def ws: WebSocket = WebSocket.acceptOrResult[JsValue, JsValue] {
-      case rh if isSameOrigin(rh) =>
+      case rh if validate(rh) =>
         toWebSocketFutureFlow(rh)
           .map { flow => Right(flow) }
           .recover {
@@ -89,8 +90,16 @@ class SiteMapController @Inject()(@Named("indexer") indexer: ActorRef,
 }
 
 
-trait SameOriginCheck {
+trait RequestValidator extends SameOriginCheck {
+  def logger: Logger
 
+  def validate(rh: RequestHeader): Boolean = {
+    isSameOrigin(rh)
+  }
+}
+
+
+trait SameOriginCheck {
   def logger: Logger
 
   def isSameOrigin(rh: RequestHeader): Boolean = {
