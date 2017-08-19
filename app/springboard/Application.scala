@@ -3,12 +3,14 @@ package springboard
 import java.net.URL
 
 import akka.actor.{ActorSystem, Props}
+import akka.stream.ActorMaterializer
+import akka.stream.scaladsl.{Sink, Source}
 import akka.util.Timeout
-import scrawler.actors.indexer.SiteIndexingActor
-import scrawler.actors.indexer.SiteIndexingActor.IndexURL
-import scrawler.util.URLSupport
+import akka.stream.OverflowStrategy.dropHead
 
 import scala.concurrent.duration._
+
+case class Message(message: String)
 
 object Application {
   implicit val timeout: Timeout = 15.minute
@@ -16,11 +18,21 @@ object Application {
 
 
   def  main(args: Array[String]) {
-    val actorSystem = ActorSystem()
+    implicit val actorSystem = ActorSystem()
+    implicit val materializer = ActorMaterializer()
 
     val url = new URL(baseUrl)
-    val indexer = actorSystem.actorOf(Props[SiteIndexingActor](new SiteIndexingActor(url)))
 
-    URLSupport.toURL(baseUrl).foreach(url => indexer ! IndexURL(url))
+    val queue = Source.queue[Message](100, dropHead).to(Sink.foreach(println)).run()
+
+
+    queue.offer(Message("this"))
+    queue.offer(Message("is"))
+    queue.offer(Message("a"))
+    queue.offer(Message("message"))
+
+    //    val indexer = actorSystem.actorOf(Props[SiteIndexingActor](new SiteIndexingActor(url)))
+//
+//    URLSupport.toURL(baseUrl).foreach(url => indexer ! IndexURL(url))
   }
 }

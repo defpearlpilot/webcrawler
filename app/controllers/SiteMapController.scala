@@ -4,6 +4,7 @@ import javax.inject._
 
 import akka.NotUsed
 import akka.actor.{ActorRef, ActorSystem, Props}
+import akka.stream.Materializer
 import akka.stream.scaladsl.Flow
 import akka.util.Timeout
 import play.api.Logger
@@ -24,7 +25,7 @@ import scala.concurrent.duration._
  */
 @Singleton
 class SiteMapController @Inject()(cc: ControllerComponents)
-                                 (implicit ec: ExecutionContext)
+                                 (implicit mat: Materializer, ec: ExecutionContext)
   extends AbstractController(cc)
           with RequestValidator
           with InjectedActorSupport
