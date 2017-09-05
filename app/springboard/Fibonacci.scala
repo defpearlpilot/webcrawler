@@ -17,18 +17,17 @@ object Fibonacci
     _fib(n)
   }
 
-//  def tfib(n: Int): Int = {
-//    @tailrec
-//    def _tfib(n1: Int, n2: Int): Int = {
-//      n1 match {
-//        case 0 => 0
-//        case 1 => 1
-//        case _ => 2
-//      }
-//    }
-//
-//    _tfib(0, 0)
-//  }
+  def tfib(n: Int): Int = {
+    @tailrec
+    def _tfib(_n: Int, prev: Int, cur: Int): Int = {
+      n match {
+        case 0 => prev
+        case _ => _tfib(_n - 1, cur, cur + prev)
+      }
+    }
+
+    _tfib(n, 0, 1)
+  }
 
 
   def main(args: Array[String]): Unit =
